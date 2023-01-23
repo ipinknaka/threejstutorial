@@ -1,7 +1,8 @@
 import Head from 'next/head';
 import { Baloo_2 } from '@next/font/google';
-import { useState } from 'react';
-import AbsoluteBeginners from '@/components/AbsoluteBeginners';
+import { useEffect, useState } from 'react';
+import { GUI, GUIController } from 'dat.gui';
+import UseAbsoluteBeginners from '@/components/UseAbsoluteBeginners';
 
 const baloo2 = Baloo_2({
   subsets: ['latin'],
@@ -21,8 +22,24 @@ const TopMenu = ({ idx, title, currentMenuId }: TopMenuProps) => {
   );
 }
 
+type datImport = {
+  default: typeof import("/home/coder/project/threejstutorial/node_modules/@types/dat.gui/index");
+  GUI: typeof GUI;
+  GUIController: typeof GUIController;
+} | undefined;
+
 export default function Home() {
-  const [menuId, setMenuId] = useState(0);
+  const [menuId, setMenuId] = useState(100);
+  const [dat, setDat] = useState<datImport>();
+  const [datGui, setDatGui] = useState<GUI>();
+
+  const ab = UseAbsoluteBeginners();
+
+  const menu = [
+    'Absolute Beginners',
+    'test2',
+    'test3'
+  ];
   const topMenuOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     //@ts-ignore
@@ -31,11 +48,43 @@ export default function Home() {
       setMenuId(ds.index);
     }
   }
-  const menu = [
-    'Absolute Beginners',
-    'test2',
-    'test3'
-  ];
+
+  useEffect(() => {
+    //https://github.com/dataarts/dat.gui/issues/271
+    const getGui = async () => {
+      const dati = await import('dat.gui');
+      // const datgui = new dat.GUI({ autoPlace: false });
+      setDat(dati);
+      const datgui = new dati.GUI();
+      setDatGui(datgui);
+    }
+    getGui();
+  }, []);
+
+  useEffect(() => {
+    if (dat) {
+      document.getElementById("canvasParent")?.replaceChildren();
+      if (datGui && datGui.__controllers.length > 0) datGui.destroy();
+      let datgui: GUI;
+      switch(+menuId) {
+        case 0:
+          datgui = new dat.GUI();
+          setDatGui(datgui);
+          ab.init(datgui);
+          const canvas = ab.renderer?.domElement as HTMLCanvasElement;
+          document.getElementById("canvasParent")?.appendChild(canvas);
+          break;
+        case 1:
+          datgui = new dat.GUI();
+          setDatGui(datgui);
+          break;
+        default:
+          datgui = new dat.GUI();
+          setDatGui(datgui);
+      }
+      
+    }
+  }, [menuId]);
 
   return (
     <>
@@ -55,11 +104,11 @@ export default function Home() {
             menu.map((m, idx) => <TopMenu key={`topmenu-${idx}`} idx={idx} title={m} currentMenuId={menuId} />)
           }
         </div>
-
-          {
-            menuId == 0 && <AbsoluteBeginners />
-          }
-
+        {/* 
+        {
+          menuId == 0 && <AbsoluteBeginners />
+        } */}
+        <div id="canvasParent" className="w-[600px] h-[600px] bg-green-300"></div>
       </main>
     </>
   )
