@@ -51,8 +51,11 @@ export default function useObjectOnMouseClick() {
         const raycaster = new Raycaster(); 
 
         renderer?.domElement.addEventListener('mousemove', (e) => {
-            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            // mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            // mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            mouse.x  = ( (e.clientX -renderer.domElement.offsetLeft) / renderer.domElement.width ) * 2 - 1;
+            mouse.y = -( (e.clientY - renderer.domElement.offsetTop) / renderer.domElement.height ) * 2 + 1;
+
             planeNormal.copy(camera.position).normalize();
             // plane.setFromNormalAndCoplanarPoint(planeNormal, new Vector3(0,0,0));
             plane.setFromNormalAndCoplanarPoint(planeNormal, scene.position);

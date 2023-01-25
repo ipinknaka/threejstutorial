@@ -141,8 +141,11 @@ export default function useAbsoluteBeginners() {
         const mousePos = new Vector2();
         renderer?.domElement.addEventListener('mousemove', e => {
             //change to normailize coordinate
-            mousePos.x = (e.clientX / window.innerWidth) * 2 - 1;
-            mousePos.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            // mousePos.x = (e.clientX / window.innerWidth) * 2 - 1;
+            // mousePos.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            mousePos.x  = ( (e.clientX -renderer.domElement.offsetLeft) / renderer.domElement.width ) * 2 - 1;
+            mousePos.y = -( (e.clientY - renderer.domElement.offsetTop) / renderer.domElement.height ) * 2 + 1;
+
             // console.log('xy', mousePos);
         });
         const raycaster = new Raycaster();

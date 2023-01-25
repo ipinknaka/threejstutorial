@@ -7,6 +7,7 @@ import useSolarSystem from '@/components/UseSolarSystem';
 import useTemplate from '@/components/UseTemplate';
 import useShaderSyntax from '@/components/UseShaderSyntax';
 import useObjectOnMouseClick from '@/components/UseObjectOnMouseClick';
+import useSubdividePlane from '@/components/UseSubdividePlane';
 
 const baloo2 = Baloo_2({
   subsets: ['latin'],
@@ -42,6 +43,7 @@ export default function Home() {
   const tp = useTemplate();
   const shaderSyntax = useShaderSyntax();
   const omc = useObjectOnMouseClick();
+  const subpl = useSubdividePlane();
 
   const topMenuOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -124,6 +126,17 @@ export default function Home() {
           document.getElementById("info")!.textContent = menu[menuId].link;
           break;
 
+        // Subdivide Plane
+        case 5:
+          datgui = new dat.GUI({ autoPlace: false });
+          document.getElementById("guiParent")?.appendChild(datgui.domElement);
+          setDatGui(datgui);
+          subpl.init();
+          canvas = subpl.renderer?.domElement as HTMLCanvasElement;
+          document.getElementById("canvasParent")?.appendChild(canvas);
+          document.getElementById("info")!.textContent = menu[menuId].link;
+          break;
+
         default:
           datgui = new dat.GUI({ autoPlace: false });
           document.getElementById("guiParent")?.appendChild(datgui.domElement);
@@ -153,6 +166,10 @@ export default function Home() {
     {
       name: 'Object on mouse click',
       link: 'https://www.youtube.com/watch?v=By9qRmcrTzs&list=PLjcjAqAnHd1EIxV4FSZIiJZvsdrBc1Xho&index=6'
+    },
+    {
+      name: 'Subdivide A Plane',
+      link: 'https://www.youtube.com/watch?v=oQbfy8QP8Lc&list=PLjcjAqAnHd1EIxV4FSZIiJZvsdrBc1Xho&index=8'
     },
   ];
   return (
