@@ -15,7 +15,7 @@ export default function useSubdividePlane() {
         setRenderer(new WebGLRenderer({ antialias: true }));
     }, []);
 
-    const init = () => {
+    const init = (statFPS: Stats) => {
         // renderer.setSize(window.innerWidth, window.innerHeight);
         renderer?.setSize(600, 600);
         // renderer!.shadowMap.enabled = true;
@@ -124,6 +124,9 @@ export default function useSubdividePlane() {
                 object.rotation.z = time / 1000;
                 object.position.y = 0.5 + 0.5 * Math.abs(Math.sin(time / 1000));
             });
+
+            statFPS.update();
+
             renderer?.render(scene, camera);
         }
         renderer?.setAnimationLoop(animate);

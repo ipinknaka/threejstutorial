@@ -29,7 +29,7 @@ export default function useSolarSystem() {
         setRenderer(new WebGLRenderer({ antialias: true }));
     }, []);
 
-    const init = () => {
+    const init = (statFPS: Stats) => {
 
         renderer?.setSize(600, 600);
         renderer!.shadowMap.enabled = true;
@@ -150,6 +150,8 @@ export default function useSolarSystem() {
             uranus.obj.rotateY(0.0004);
             neptune.obj.rotateY(0.0001);
             pluto.obj.rotateY(0.00007);
+
+            statFPS.update();
 
             renderer?.render(scene, camera);
         }

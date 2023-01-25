@@ -11,7 +11,6 @@ import {
 } from 'three';
 import nebula from '../public/nebula.jpg';
 import stars from '../public/stars.jpg';
-import { render } from 'react-dom';
 const monkeyUrl = new URL('../public/monkey.glb', import.meta.url);
 
 type datImport = {
@@ -26,7 +25,7 @@ export default function useAbsoluteBeginners() {
         setRenderer(new WebGLRenderer({ antialias: true }));
     }, []);
 
-    const init = (datgui: GUI) => {
+    const init = (statFPS: Stats, datgui: GUI) => {
 
         renderer?.setSize(600, 600);
         renderer!.shadowMap.enabled = true;
@@ -269,6 +268,8 @@ export default function useAbsoluteBeginners() {
             plane2.geometry.attributes.position.array[2] -= 10 * Math.random();
             //@ts-ignore
             plane2.geometry.attributes.position.array[lastPointZ] = plane2.geometry.attributes.position.array[lastPointZ] + 2;
+
+            statFPS.update();
 
             renderer?.render(scene, camera);
 

@@ -16,7 +16,7 @@ export default function useShaderSyntax() {
         setRenderer(new WebGLRenderer({ antialias: true }));
     }, []);
 
-    const init = () => {
+    const init = (statFPS: Stats) => {
         // renderer.setSize(window.innerWidth, window.innerHeight);
         renderer?.setSize(600, 600);
         // renderer!.shadowMap.enabled = true;
@@ -108,6 +108,9 @@ export default function useShaderSyntax() {
 
         const animate = (time: number) => {
             uniforms.u_time.value = clock.getElapsedTime();
+
+            statFPS.update();
+
             renderer?.render(scene, camera);
         }
         renderer?.setAnimationLoop(animate);

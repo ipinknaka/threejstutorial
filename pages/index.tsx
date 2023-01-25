@@ -9,6 +9,8 @@ import useShaderSyntax from '@/components/UseShaderSyntax';
 import useObjectOnMouseClick from '@/components/UseObjectOnMouseClick';
 import useSubdividePlane from '@/components/UseSubdividePlane';
 
+import Stats from 'stats.js';
+
 const baloo2 = Baloo_2({
   subsets: ['latin'],
 });
@@ -65,6 +67,12 @@ export default function Home() {
 
   useEffect(() => {
     if (dat) {
+      document.getElementById("statsParent")?.replaceChildren();
+      const statFPS = new Stats();
+      statFPS.showPanel(0);
+      statFPS.dom.style.cssText = 'position:absolute;top:30px;left:10px;';
+      document.getElementById("statsParent")?.appendChild(statFPS.dom);
+
       document.getElementById("canvasParent")?.replaceChildren();
       if (datGui) {
         datGui.destroy();
@@ -78,7 +86,7 @@ export default function Home() {
           datgui = new dat.GUI({ autoPlace: false });
           document.getElementById("guiParent")?.appendChild(datgui.domElement);
           setDatGui(datgui);
-          ab.init(datgui);
+          ab.init(statFPS, datgui);
           canvas = ab.renderer?.domElement as HTMLCanvasElement;
           document.getElementById("canvasParent")?.appendChild(canvas);
           document.getElementById("info")!.textContent = menu[menuId].link;
@@ -87,7 +95,7 @@ export default function Home() {
           datgui = new dat.GUI({ autoPlace: false });
           document.getElementById("guiParent")?.appendChild(datgui.domElement);
           setDatGui(datgui);
-          ss.init();
+          ss.init(statFPS);
           canvas = ss.renderer?.domElement as HTMLCanvasElement;
           document.getElementById("canvasParent")?.appendChild(canvas);
           document.getElementById("info")!.textContent = menu[menuId].link;
@@ -98,7 +106,7 @@ export default function Home() {
           datgui = new dat.GUI({ autoPlace: false });
           document.getElementById("guiParent")?.appendChild(datgui.domElement);
           setDatGui(datgui);
-          tp.init();
+          tp.init(statFPS);
           canvas = tp.renderer?.domElement as HTMLCanvasElement;
           document.getElementById("canvasParent")?.appendChild(canvas);
           document.getElementById("info")!.textContent = menu[menuId].link;
@@ -109,7 +117,7 @@ export default function Home() {
           datgui = new dat.GUI({ autoPlace: false });
           document.getElementById("guiParent")?.appendChild(datgui.domElement);
           setDatGui(datgui);
-          shaderSyntax.init();
+          shaderSyntax.init(statFPS);
           canvas = shaderSyntax.renderer?.domElement as HTMLCanvasElement;
           document.getElementById("canvasParent")?.appendChild(canvas);
           document.getElementById("info")!.textContent = menu[menuId].link;
@@ -120,7 +128,7 @@ export default function Home() {
           datgui = new dat.GUI({ autoPlace: false });
           document.getElementById("guiParent")?.appendChild(datgui.domElement);
           setDatGui(datgui);
-          omc.init();
+          omc.init(statFPS);
           canvas = omc.renderer?.domElement as HTMLCanvasElement;
           document.getElementById("canvasParent")?.appendChild(canvas);
           document.getElementById("info")!.textContent = menu[menuId].link;
@@ -131,7 +139,7 @@ export default function Home() {
           datgui = new dat.GUI({ autoPlace: false });
           document.getElementById("guiParent")?.appendChild(datgui.domElement);
           setDatGui(datgui);
-          subpl.init();
+          subpl.init(statFPS);
           canvas = subpl.renderer?.domElement as HTMLCanvasElement;
           document.getElementById("canvasParent")?.appendChild(canvas);
           document.getElementById("info")!.textContent = menu[menuId].link;
@@ -205,6 +213,8 @@ export default function Home() {
         <div id="canvasParent" className="w-[600px] h-[600px] bg-green-300"></div>
         <div id="guiParent" className="z-10 absolute top-16 right-0"></div>
         <div id="info" className="mt-2 text-sm p-2 bg-gray-200 rounded-sm"></div>
+        <div id="statsParent" className="z-10 absolute top-16 left-0"></div>
+
       </main>
     </>
   )
