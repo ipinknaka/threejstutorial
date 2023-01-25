@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react';
 import { GUI, GUIController } from 'dat.gui';
 import useAbsoluteBeginners from '@/components/UseAbsoluteBeginners';
 import useSolarSystem from '@/components/UseSolarSystem';
+import useTemplate from '@/components/UseTemplate';
+import useShaderSyntax from '@/components/UseShaderSyntax';
+import useObjectOnMouseClick from '@/components/UseObjectOnMouseClick';
 
 const baloo2 = Baloo_2({
   subsets: ['latin'],
@@ -36,6 +39,9 @@ export default function Home() {
 
   const ab = useAbsoluteBeginners();
   const ss = useSolarSystem();
+  const tp = useTemplate();
+  const shaderSyntax = useShaderSyntax();
+  const omc = useObjectOnMouseClick();
 
   const topMenuOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -84,6 +90,40 @@ export default function Home() {
           document.getElementById("canvasParent")?.appendChild(canvas);
           document.getElementById("info")!.textContent = menu[menuId].link;
           break;
+
+        //Template
+        case 2:
+          datgui = new dat.GUI({ autoPlace: false });
+          document.getElementById("guiParent")?.appendChild(datgui.domElement);
+          setDatGui(datgui);
+          tp.init();
+          canvas = tp.renderer?.domElement as HTMLCanvasElement;
+          document.getElementById("canvasParent")?.appendChild(canvas);
+          document.getElementById("info")!.textContent = menu[menuId].link;
+          break;
+
+        // Shader Syntax
+        case 3:
+          datgui = new dat.GUI({ autoPlace: false });
+          document.getElementById("guiParent")?.appendChild(datgui.domElement);
+          setDatGui(datgui);
+          shaderSyntax.init();
+          canvas = shaderSyntax.renderer?.domElement as HTMLCanvasElement;
+          document.getElementById("canvasParent")?.appendChild(canvas);
+          document.getElementById("info")!.textContent = menu[menuId].link;
+          break;
+
+        // Create object on mouse click
+        case 4:
+          datgui = new dat.GUI({ autoPlace: false });
+          document.getElementById("guiParent")?.appendChild(datgui.domElement);
+          setDatGui(datgui);
+          omc.init();
+          canvas = omc.renderer?.domElement as HTMLCanvasElement;
+          document.getElementById("canvasParent")?.appendChild(canvas);
+          document.getElementById("info")!.textContent = menu[menuId].link;
+          break;
+
         default:
           datgui = new dat.GUI({ autoPlace: false });
           document.getElementById("guiParent")?.appendChild(datgui.domElement);
@@ -103,8 +143,16 @@ export default function Home() {
       link: 'https://www.youtube.com/watch?v=XXzqSAt3UIw&list=PLjcjAqAnHd1EIxV4FSZIiJZvsdrBc1Xho&index=2'
     },
     {
-      name: 'Absolute Beginners',
-      link: 'https://www.youtube.com/watch?v=xJAfLdUgdc4&list=PLjcjAqAnHd1EIxV4FSZIiJZvsdrBc1Xho'
+      name: 'Template',
+      link: 'https://github.com/WaelYasmina/ThreeBoilerplate/blob/main/src/js/scripts.js'
+    },
+    {
+      name: 'Shader Syntax',
+      link: 'https://www.youtube.com/watch?v=xZM8UJqN1eY&list=PLjcjAqAnHd1EIxV4FSZIiJZvsdrBc1Xho&index=5'
+    },
+    {
+      name: 'Object on mouse click',
+      link: 'https://www.youtube.com/watch?v=By9qRmcrTzs&list=PLjcjAqAnHd1EIxV4FSZIiJZvsdrBc1Xho&index=6'
     },
   ];
   return (
@@ -116,13 +164,13 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
         {/* <script id="vertexShader" type="x-shader/x-vertex"> */}
         {/* <script id="vertexShader" type="vertex"> */}
-          {/* void main() {
+        {/* void main() {
             gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
           } */}
         {/* </script> */}
         {/* <script id="fragmentShader" type="x-shader/x-fragment"> */}
         {/* <script id="fragmentShader" type="fragment"> */}
-          {/* void main() {
+        {/* void main() {
             gl_FragColor = vec4(0.5, 0.5, 1.0, 1.0);
           } */}
         {/* </script> */}
