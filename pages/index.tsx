@@ -12,6 +12,7 @@ import useObjectOnMouseClick from '@/components/UseObjectOnMouseClick';
 import useSubdividePlane from '@/components/UseSubdividePlane';
 import useModelSketchfab from '@/components/UseModelSketchfab';
 import useLoading from '@/components/UseLoading';
+import useCSS2DRenderer from '@/components/UseCSS2DRenderer';
 
 const baloo2 = Baloo_2({
   subsets: ['latin'],
@@ -49,6 +50,7 @@ export default function Home() {
   const subpl = useSubdividePlane();
   const msf = useModelSketchfab();
   const loading = useLoading();
+  const css2d = useCSS2DRenderer();
 
   const topMenuOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -130,6 +132,11 @@ export default function Home() {
           canvas = loading.renderer?.domElement as HTMLCanvasElement;
           break;
 
+        case "CSS2DRenderer":
+          css2d.init(statFPS);
+          canvas = css2d.renderer?.domElement as HTMLCanvasElement;
+          break;
+
         default:
           canvas = document.createElement('canvas');
       }
@@ -171,6 +178,11 @@ export default function Home() {
       name: 'loading',
       link: 'https://www.youtube.com/watch?v=zMzuPIiznQ4&list=PLjcjAqAnHd1EIxV4FSZIiJZvsdrBc1Xho&index=14'
     },
+    {
+      name: 'CSS2DRenderer',
+      link: 'https://www.youtube.com/watch?v=0ZW3xrFhY3w&list=PLjcjAqAnHd1EIxV4FSZIiJZvsdrBc1Xho&index=43'
+    },
+
   ];
   return (
     <>
@@ -211,7 +223,7 @@ export default function Home() {
           <div id="statsParent"></div>
           <div id="guiParent"></div>
         </div>
-        <div id="canvasParent" className="w-[600px] h-[600px] bg-green-300"></div>
+        <div id="canvasParent" className="w-[600px] h-[600px] bg-green-300 relative"></div>
         <div id="info" className="mt-2 text-sm p-2 bg-gray-200 rounded-sm"></div>
       </main>
       <div id="progressWindow"
@@ -219,7 +231,7 @@ export default function Home() {
             bg-black opacity-90
             justify-center items-center hidden
           ">
-          <progress id="progressBar" value="0" max="100"></progress>
+        <progress id="progressBar" value="0" max="100"></progress>
       </div>
     </>
   )
