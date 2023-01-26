@@ -2,28 +2,29 @@ import Head from 'next/head';
 import { Baloo_2 } from '@next/font/google';
 import { useEffect, useState } from 'react';
 import { GUI, GUIController } from 'dat.gui';
+import Stats from 'stats.js';
+
 import useAbsoluteBeginners from '@/components/UseAbsoluteBeginners';
 import useSolarSystem from '@/components/UseSolarSystem';
 import useTemplate from '@/components/UseTemplate';
 import useShaderSyntax from '@/components/UseShaderSyntax';
 import useObjectOnMouseClick from '@/components/UseObjectOnMouseClick';
 import useSubdividePlane from '@/components/UseSubdividePlane';
-
-import Stats from 'stats.js';
+import useModelSketchfab from '@/components/UseModelSketchfab';
+import useLoading from '@/components/UseLoading';
 
 const baloo2 = Baloo_2({
   subsets: ['latin'],
 });
 
 type TopMenuProps = {
-  idx: number;
   title: string;
-  currentMenuId: number;
+  selectedTitle: string;
 }
-const TopMenu = ({ idx, title, currentMenuId }: TopMenuProps) => {
+const TopMenu = ({ title, selectedTitle }: TopMenuProps) => {
   return (
-    <div data-index={idx}
-      className={`cursor-pointer text-xl px-2 rounded-md ${(idx == currentMenuId) ? 'bg-green-400' : 'bg-slate-300'}`}>
+    <div data-name={title}
+      className={`cursor-pointer w-fit text-xl mt-4 px-2 rounded-md ${(title == selectedTitle) ? 'bg-green-400' : 'bg-slate-300'}`}>
       {title}
     </div>
   );
@@ -36,7 +37,7 @@ type datImport = {
 } | undefined;
 
 export default function Home() {
-  const [menuId, setMenuId] = useState(100);
+  const [selectedMenu, setSelectedMenu] = useState("");
   const [dat, setDat] = useState<datImport>();
   const [datGui, setDatGui] = useState<GUI>();
 
@@ -46,13 +47,15 @@ export default function Home() {
   const shaderSyntax = useShaderSyntax();
   const omc = useObjectOnMouseClick();
   const subpl = useSubdividePlane();
+  const msf = useModelSketchfab();
+  const loading = useLoading();
 
   const topMenuOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     //@ts-ignore
     const ds = e.target.dataset;
-    if ('index' in ds) {
-      setMenuId(ds.index);
+    if ('name' in ds) {
+      setSelectedMenu(ds.name);
     }
   }
 
@@ -70,7 +73,8 @@ export default function Home() {
       document.getElementById("statsParent")?.replaceChildren();
       const statFPS = new Stats();
       statFPS.showPanel(0);
-      statFPS.dom.style.cssText = 'position:absolute;top:30px;left:10px;';
+      // statFPS.dom.style.cssText = 'position:absolute;top:30px;left:10px;';
+      statFPS.dom.style.cssText = 'position:relative;top:10px;left:10px;';
       document.getElementById("statsParent")?.appendChild(statFPS.dom);
 
       document.getElementById("canvasParent")?.replaceChildren();
@@ -80,81 +84,65 @@ export default function Home() {
       }
       document.getElementById("guiParent")?.replaceChildren();
       let datgui: GUI;
+      datgui = new dat.GUI({ autoPlace: false });
+      document.getElementById("guiParent")?.appendChild(datgui.domElement);
+      setDatGui(datgui);
       let canvas: HTMLCanvasElement;
-      switch (+menuId) {
-        case 0:
-          datgui = new dat.GUI({ autoPlace: false });
-          document.getElementById("guiParent")?.appendChild(datgui.domElement);
-          setDatGui(datgui);
+      const m = menu.find(el => el.name === selectedMenu);
+      switch (selectedMenu) {
+        case "Absolute Beginners":
           ab.init(statFPS, datgui);
           canvas = ab.renderer?.domElement as HTMLCanvasElement;
-          document.getElementById("canvasParent")?.appendChild(canvas);
-          document.getElementById("info")!.textContent = menu[menuId].link;
           break;
-        case 1:
-          datgui = new dat.GUI({ autoPlace: false });
-          document.getElementById("guiParent")?.appendChild(datgui.domElement);
-          setDatGui(datgui);
+
+        case "Solar System":
           ss.init(statFPS);
           canvas = ss.renderer?.domElement as HTMLCanvasElement;
-          document.getElementById("canvasParent")?.appendChild(canvas);
-          document.getElementById("info")!.textContent = menu[menuId].link;
           break;
 
-        //Template
-        case 2:
-          datgui = new dat.GUI({ autoPlace: false });
-          document.getElementById("guiParent")?.appendChild(datgui.domElement);
-          setDatGui(datgui);
+        case "Template":
           tp.init(statFPS);
           canvas = tp.renderer?.domElement as HTMLCanvasElement;
-          document.getElementById("canvasParent")?.appendChild(canvas);
-          document.getElementById("info")!.textContent = menu[menuId].link;
           break;
 
-        // Shader Syntax
-        case 3:
-          datgui = new dat.GUI({ autoPlace: false });
-          document.getElementById("guiParent")?.appendChild(datgui.domElement);
-          setDatGui(datgui);
+        case "Shader Syntax":
           shaderSyntax.init(statFPS);
           canvas = shaderSyntax.renderer?.domElement as HTMLCanvasElement;
-          document.getElementById("canvasParent")?.appendChild(canvas);
-          document.getElementById("info")!.textContent = menu[menuId].link;
           break;
 
-        // Create object on mouse click
-        case 4:
-          datgui = new dat.GUI({ autoPlace: false });
-          document.getElementById("guiParent")?.appendChild(datgui.domElement);
-          setDatGui(datgui);
+        case "Object on mouse click":
           omc.init(statFPS);
           canvas = omc.renderer?.domElement as HTMLCanvasElement;
-          document.getElementById("canvasParent")?.appendChild(canvas);
-          document.getElementById("info")!.textContent = menu[menuId].link;
           break;
 
-        // Subdivide Plane
-        case 5:
-          datgui = new dat.GUI({ autoPlace: false });
-          document.getElementById("guiParent")?.appendChild(datgui.domElement);
-          setDatGui(datgui);
+        case "Subdivide A Plane":
           subpl.init(statFPS);
           canvas = subpl.renderer?.domElement as HTMLCanvasElement;
-          document.getElementById("canvasParent")?.appendChild(canvas);
-          document.getElementById("info")!.textContent = menu[menuId].link;
+          break;
+
+        case "Model Sketchfab":
+          msf.init(statFPS);
+          canvas = msf.renderer?.domElement as HTMLCanvasElement;
+          break;
+
+        case "loading":
+          loading.init(statFPS);
+          canvas = loading.renderer?.domElement as HTMLCanvasElement;
           break;
 
         default:
-          datgui = new dat.GUI({ autoPlace: false });
-          document.getElementById("guiParent")?.appendChild(datgui.domElement);
-          setDatGui(datgui);
+          canvas = document.createElement('canvas');
       }
-
+      document.getElementById("canvasParent")?.appendChild(canvas);
+      document.getElementById("info")!.textContent = m!.link;
     }
-  }, [menuId]);
+  }, [selectedMenu]);
 
   const menu = [
+    {
+      name: 'Template',
+      link: 'https://github.com/WaelYasmina/ThreeBoilerplate/blob/main/src/js/scripts.js'
+    },
     {
       name: 'Absolute Beginners',
       link: 'https://www.youtube.com/watch?v=xJAfLdUgdc4&list=PLjcjAqAnHd1EIxV4FSZIiJZvsdrBc1Xho'
@@ -162,10 +150,6 @@ export default function Home() {
     {
       name: 'Solar System',
       link: 'https://www.youtube.com/watch?v=XXzqSAt3UIw&list=PLjcjAqAnHd1EIxV4FSZIiJZvsdrBc1Xho&index=2'
-    },
-    {
-      name: 'Template',
-      link: 'https://github.com/WaelYasmina/ThreeBoilerplate/blob/main/src/js/scripts.js'
     },
     {
       name: 'Shader Syntax',
@@ -178,6 +162,14 @@ export default function Home() {
     {
       name: 'Subdivide A Plane',
       link: 'https://www.youtube.com/watch?v=oQbfy8QP8Lc&list=PLjcjAqAnHd1EIxV4FSZIiJZvsdrBc1Xho&index=8'
+    },
+    {
+      name: 'Model Sketchfab',
+      link: 'https://www.youtube.com/watch?v=f1RbD_wkGpc'
+    },
+    {
+      name: 'loading',
+      link: 'https://www.youtube.com/watch?v=zMzuPIiznQ4&list=PLjcjAqAnHd1EIxV4FSZIiJZvsdrBc1Xho&index=14'
     },
   ];
   return (
@@ -201,21 +193,34 @@ export default function Home() {
         {/* </script> */}
       </Head>
       <main className="flex flex-col justify-center items-center">
-        <div
+        {/* <div
           onClick={topMenuOnClick}
           className={`${baloo2.className} font-light p-4
-            flex flex-row justify-evenly items-center w-full bg-gray-900`}
+            flex flex-row flex-wrap space-y-4 space-x-4 justify-evenly items-center w-full bg-gray-900`}
+        > */}
+        <div
+          onClick={topMenuOnClick}
+          className={`${baloo2.className} font-light px-4 pb-4 w-full bg-gray-900
+            flex flex-row flex-wrap justify-evenly items-center`}
         >
           {
-            menu.map((m, idx) => <TopMenu key={`topmenu-${idx}`} idx={idx} title={m.name} currentMenuId={menuId} />)
+            menu.map((m, idx) => <TopMenu key={`topmenu-${idx}`} title={m.name} selectedTitle={selectedMenu} />)
           }
         </div>
+        <div className="w-full flex flex-row justify-between">
+          <div id="statsParent"></div>
+          <div id="guiParent"></div>
+        </div>
         <div id="canvasParent" className="w-[600px] h-[600px] bg-green-300"></div>
-        <div id="guiParent" className="z-10 absolute top-16 right-0"></div>
         <div id="info" className="mt-2 text-sm p-2 bg-gray-200 rounded-sm"></div>
-        <div id="statsParent" className="z-10 absolute top-16 left-0"></div>
-
       </main>
+      <div id="progressWindow"
+        className="fixed top-0 right-0 bottom-0 left-0 
+            bg-black opacity-90
+            justify-center items-center hidden
+          ">
+          <progress id="progressBar" value="0" max="100"></progress>
+      </div>
     </>
   )
 }

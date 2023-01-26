@@ -1,4 +1,4 @@
-// https://github.com/WaelYasmina/ThreeBoilerplate/blob/main/src/js/scripts.js
+
 import { useEffect, useState } from 'react';
 import {
     AmbientLight, AxesHelper, BoxGeometry,

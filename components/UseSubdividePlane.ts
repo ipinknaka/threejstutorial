@@ -1,11 +1,9 @@
 // https://github.com/WaelYasmina/subdivideplane/blob/main/src/js/scripts.js
 import { useEffect, useState } from 'react';
 import {
-    AmbientLight, AxesHelper, BoxGeometry,
-    CameraHelper, CubeTextureLoader, DirectionalLight, DirectionalLightHelper,
-    DoubleSide, Fog, FogExp2, GridHelper, Mesh, MeshBasicMaterial, MeshStandardMaterial,
-    Object3D,
-    PerspectiveCamera, PlaneGeometry, PointLight, Raycaster, RingGeometry, Scene, ShaderMaterial, SphereGeometry, SpotLight, SpotLightHelper, TextureLoader, Vector2, Vector3, WebGLRenderer
+    DoubleSide, GridHelper, Mesh, MeshBasicMaterial,
+    PerspectiveCamera, PlaneGeometry, Raycaster, Scene, SphereGeometry, 
+    Vector2, Vector3, WebGLRenderer
 } from 'three';
 import { OrbitControls } from '../jsm/controls/OrbitControls';
 
@@ -113,7 +111,6 @@ export default function useSubdividePlane() {
                     highlightMesh.material.color.setHex(0xFF0000);
                 }
             }
-            console.log(scene.children.length);
         });
 
 
