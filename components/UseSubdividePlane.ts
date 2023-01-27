@@ -65,8 +65,8 @@ export default function useSubdividePlane() {
         renderer?.domElement.addEventListener('mousemove', function (e) {
             // mousePosition.x = (e.clientX / window.innerWidth) * 2 - 1;
             // mousePosition.y = -(e.clientY / window.innerHeight) * 2 + 1;
-            mousePosition.x  = ( (e.clientX -renderer.domElement.offsetLeft) / renderer.domElement.width ) * 2 - 1;
-            mousePosition.y = -( (e.clientY - renderer.domElement.offsetTop) / renderer.domElement.height ) * 2 + 1;
+            mousePosition.x  = ( (e.clientX -renderer.domElement.offsetLeft) / renderer.domElement.clientWidth ) * 2 - 1;
+            mousePosition.y = -( (e.clientY - renderer.domElement.offsetTop) / renderer.domElement.clientHeight ) * 2 + 1;
 
             raycaster.setFromCamera(mousePosition, camera);
             intersects = raycaster.intersectObject(planeMesh);

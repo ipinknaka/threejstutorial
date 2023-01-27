@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import {
+    ArrowHelper,
     AxesHelper, GridHelper, Group, Mesh, MeshBasicMaterial, PerspectiveCamera, Raycaster, Scene,
     SphereGeometry,
     Vector2,
@@ -85,26 +86,46 @@ export default function useCSS2DRenderer() {
         const mousePos = new Vector2();
         const raycaster = new Raycaster();
         renderer?.domElement.addEventListener('mousemove', function (e) {
-            mousePos.x = ((e.clientX - renderer.domElement.offsetLeft) / renderer.domElement.width) * 2 - 1;
-            mousePos.y = -((e.clientY - renderer.domElement.offsetTop) / renderer.domElement.height) * 2 + 1;
+            // mousePos.x = ((e.clientX - renderer.domElement.offsetLeft) / renderer.domElement.width) * 2 - 1;
+            // mousePos.y = -((e.clientY - renderer.domElement.offsetTop) / renderer.domElement.height) * 2 + 1;
+            mousePos.x = ((e.clientX - renderer.domElement.parentElement?.offsetLeft!) / 600) * 2 - 1;
+            mousePos.y = -((e.clientY - renderer.domElement.parentElement?.offsetTop!) / 600) * 2 + 1;
             raycaster.setFromCamera(mousePos, camera);
             const intersects = raycaster.intersectObject(group);
             if (intersects.length > 0) {
+                console.log(intersects[0].object.name);
                 switch (intersects[0].object.name) {
                     case "sphere1":
-                        console.log('sphere1');
-                        p.className = "tooltip block";
+                        p.className = "block font-bold text-xl text-red-500";
                         sphereLabel.position.set(-6, 0, 4);
                         p.textContent = 'Sphere 1';
+                        break;
+                    case "sphere2":
+                        p.className = "block";
+                        sphereLabel.position.set(6, 0, 4);
+                        p.textContent = 'Sphere 2';
+                        break;
+                    case "sphere3":
+                        p.className = "block";
+                        sphereLabel.position.set(2, 2, 2);
+                        p.textContent = 'Sphere 3';
                         break;
                     default:
                         console.log('default');
                 }
             } else {
-                p.className = "tooltip hidden";
+                p.className = "hidden";
             }
         });
-
+        // let arrow: ArrowHelper;
+        // renderer?.domElement.addEventListener('mousedown', function (e) {
+        //     mousePos.x = ((e.clientX - renderer.domElement.parentElement?.offsetLeft!) / 600) * 2 - 1;
+        //     mousePos.y = -((e.clientY - renderer.domElement.parentElement?.offsetTop!) / 600) * 2 + 1;
+        //     console.log('mousedown', mousePos.x, mousePos.y);
+        //     scene.remove(arrow);
+        //     arrow = new ArrowHelper(raycaster.ray.direction, raycaster.ray.origin, 8, 0xff0000);
+        //     scene.add(arrow);
+        // });
         const animate = (time: number) => {
             statFPS.update();
             labelCSS2DRenderer.render(scene, camera);
